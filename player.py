@@ -9,8 +9,9 @@ import os
 class Player():
     def __init__(self):
         # sound effects
-        self.bomb_sound = os.path.join(os.getcwd(), "bomb_sound.mp3")
-        self.miss_sound = os.path.join(os.getcwd(), "miss_sound.mp3")
+        self.bomb_sound = os.path.join(os.getcwd(), "Sounds", "bomb_sound.mp3")
+        self.miss_sound = os.path.join(os.getcwd(), "Sounds", "miss_sound.mp3")
+        self.put_ship_sound = os.path.join(os.getcwd(), "Sounds", "put_ship_sound.mp3")
 
         self.isShipPlaced = {"Carrier": False, "Battleship": False, "Submarine": False, "Destroyer": False}
         self.currentShip = None
@@ -35,6 +36,8 @@ class Player():
         self.sign_ui.pushButton.clicked.connect(self.signIn)
         self.sign_ui.lineEdit.returnPressed.connect(self.signIn)
         self.game_ui.placeShipButton.clicked.connect(self.checkShipPlacement)
+        self.game_ui.leaveButton.clicked.connect(self.leaveGame)
+
         self.game_ui.tableWidget.selectionModel().selectionChanged.connect(self.tableSelectionChanged)
 
         self.Form_sign_ui.show()
@@ -66,6 +69,11 @@ class Player():
                 return
 
         self.game_ui.label.setText("")
+        self.game_ui.tableWidget.setSelectionMode(self.game_ui.tableWidget.NoSelection)
+        self.game_ui.tableWidget.clearSelection()
+
+        self.game_ui.tableWidget_2.setSelectionMode(self.game_ui.tableWidget.SingleSelection)
+
         self.game_ui.placeShipButton.setDisabled(True)
 
     def checkShipPlacement(self):
@@ -118,6 +126,7 @@ class Player():
             return
 
         self.isShipPlaced[self.currentShip] = True
+        self.playPutShipSound()
         self.placeShips()
 
     def playBombSound(self):
@@ -126,6 +135,9 @@ class Player():
     def playMissSound(self):
         playsound(self.miss_sound, block=False)
 
+    def playPutShipSound(self):
+        playsound(self.put_ship_sound, block=False)
+
     def showWarning(self, text, title="Warning!"):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Warning)
@@ -133,7 +145,21 @@ class Player():
         msgBox.setWindowTitle(title)
 
         msgBox.exec()
-        
+
+    def leaveGame(self):
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Warning)
+        msgBox.setText("Are you sure you want to leave the game?")
+        msgBox.setWindowTitle("Leaving")
+        msgBox.addButton(QtWidgets.QMessageBox.Yes)
+        msgBox.addButton(QtWidgets.QMessageBox.No)
+
+        bttn = msgBox.exec_()
+
+        if bttn == QtWidgets.QMessageBox.Yes:
+            sys.exit()
+        else:
+            pass
 
 client = Player()
 client.playBombSound()
