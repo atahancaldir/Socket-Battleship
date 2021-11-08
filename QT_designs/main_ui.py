@@ -12,6 +12,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(1031, 505)
+        Form.setFixedSize(1031, 505)
         Form.setStyleSheet("background:black;")
         self.frame_2 = QtWidgets.QFrame(Form)
         self.frame_2.setGeometry(QtCore.QRect(10, 10, 500, 351))
@@ -176,7 +177,7 @@ class Ui_Form(object):
 
             item = self.tableWidget_2.horizontalHeaderItem(i)
             item.setText(_translate("Form", col_names[i]))
-            
+        
         self.label.setText(_translate("Form", "TextLabel"))
         self.leaveButton.setText(_translate("Form", "Leave"))
         self.placeShipButton.setText(_translate("Form", "Place Ship"))
