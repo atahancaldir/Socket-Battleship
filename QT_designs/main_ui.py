@@ -7,6 +7,9 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import os
+
+bomb_icon = os.path.join(os.getcwd(), "Image", "bomb.png")
 
 class Ui_Form(object):
     def setupUi(self, Form):
