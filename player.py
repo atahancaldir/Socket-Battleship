@@ -74,7 +74,7 @@ class Player():
 
         self.game_ui.tableWidget_2.setSelectionMode(self.game_ui.tableWidget.SingleSelection)
 
-        self.game_ui.placeShipButton.setDisabled(True)
+        self.game_ui.placeShipButton.setHidden(True)
 
     def checkShipPlacement(self):
         if len(self.selectedCells) != self.shipSizes[self.currentShip]:
@@ -162,4 +162,3 @@ class Player():
             pass
 
 client = Player()
-client.playBombSound()
