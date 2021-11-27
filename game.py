@@ -8,13 +8,14 @@ import os
 
 class Game():
     def __init__(self):
+
         # sound effects
         self.bomb_sound = os.path.join(os.getcwd(), "Sounds", "bomb_sound.mp3")
         self.miss_sound = os.path.join(os.getcwd(), "Sounds", "miss_sound.mp3")
         self.put_ship_sound = os.path.join(os.getcwd(), "Sounds", "put_ship_sound.mp3")
 
         self.isShipPlaced = {"Carrier": False, "Battleship": False, "Submarine": False, "Destroyer": False}
-        self.currentShip = None
+        self.currentShip = "Carrier"
         self.shipSizes = {"Carrier": 5, "Battleship": 4, "Submarine": 3, "Destroyer": 2}
 
         self.selectedCells = set()
@@ -25,6 +26,17 @@ class Game():
         self.HEADER = 2048
         self.DISCONNECT_MSG = "[Disconnected]"
         self.ADDR = (self.IP, self.PORT)
+        
+        self.send_key = False
+        self.send_msg = ""
+
+        # for players info
+        self.username = ""
+        self.locatedShips = [[]]
+        self.opponentName = ""
+        self.opponentShips = [[]]
+        self.attackedAreas = [[]]
+        self.gameStats = ""
 
         # for PyQt5
         self.app = QtWidgets.QApplication(sys.argv)
@@ -47,9 +59,6 @@ class Game():
 
         self.game_ui.tableWidget.selectionModel().selectionChanged.connect(self.tableSelectionChanged)
 
-        self.Form_sign_ui.show()
-        sys.exit(self.app.exec_())
-
     def tableSelectionChanged(self, selected, deselected):
         for i in selected.indexes():
             self.selectedCells.add((i.row(), i.column()))
@@ -62,11 +71,10 @@ class Game():
             self.showWarning("Enter a valid username!")
             return
 
-        self.game_ui.username_label.setText(self.sign_ui.lineEdit.text())
+        self.username = self.sign_ui.lineEdit.text()
+        self.game_ui.username_label.setText(self.username)
         self.Form_sign_ui.close()
         self.Form_game_ui.show()
-
-        self.placeShips()
 
     def placeShips(self):
         for ship, value in self.isShipPlaced.items():
@@ -167,5 +175,3 @@ class Game():
             sys.exit()
         else:
             pass
-
-client = Game()

@@ -1,8 +1,6 @@
 import socket
-from _thread import *
-import pickle
-from game import Game
-
+from threading import Thread
+from game import *
 
 class Server(Game):
     def __init__(self):
@@ -14,50 +12,38 @@ class Server(Game):
             self.s.bind(self.ADDR)
         except socket.error as e:
             self.game_ui.label.setText("Connection failed!")
-
+        
         self.s.listen()
         self.game_ui.label.setText("Server started, waiting for the client...")
 
-    def threaded_client(self, conn, addr):
-        self.game_ui.label.setText("Client connected")
+        T = Thread(target=self.socketConnection, daemon=True)
+        T.start()
 
-        self.connected = True
-        while self.connected:
-            msg_length = conn.recv(self.HEADER).decode("utf-8")
+        self.Form_sign_ui.show()
+        sys.exit(self.app.exec_())
+
+    def socketConnection(self):
+        self.conn, self.addr = self.s.accept()  # waits for the client
+        self.game_ui.label.setText("Client connected!")
+
+        self.clientConnected = True
+        while self.clientConnected:
+            msg_length = self.conn.recv(self.HEADER).decode("utf-8")
+            print(msg_length)
             if msg_length:
                 msg_length = int(msg_length)
-                msg = conn.recv(msg_length).decode("utf-8")
+                msg = self.conn.recv(msg_length).decode("utf-8")
                 if msg == self.DISCONNECT_MSG:
-                    self.connected = False
+                    self.clientConnected = False
 
-        """
-        #conn.send(pickle.dumps(players[player]))
-        reply = ""
-        while True:
-            try:
-                #data = pickle.loads(conn.recv(2048))  # how many bits received show
-                players[player] = data
+                if self.send_key:
+                    self.conn.send(self.send_msg.encode("utf-8"))
+                    self.send_key = False
 
-                if not data:
-                    print("Disconnected")
-                    break
-                else:
-                    if player == 1: reply = players[0]
-                    else: reply = players[1]
-                    print("Received: ", data)
-                    print("Sending: ", reply)
+        self.conn.close()
+        self.gameOver()
 
-                conn.sendall(pickle.dumps(reply))
-            except:
-                break
-        
-        print("Lost connection")
-        conn.close()
-        """
+    def gameOver(self):
+        pass
 
-while True:
-    conn, addr = s.accept()  # accept connection
-    print("Connected to:", addr)
-
-    start_new_thread(threaded_client, (conn, currentPlayer))
-    currentPlayer += 1
+s = Server()

@@ -192,8 +192,7 @@ class Ui_Form(object):
         self.label.setText(_translate("Form", "Status"))
         self.leaveButton.setText(_translate("Form", "Leave"))
         self.placeShipButton.setText(_translate("Form", "Place Ship"))
-        self.shootButton.setText(_translate("Form", "Shoot!"))
-
+        self.shootButton.setText(_translate("Form", "Shoot!"))    
 
 if __name__ == "__main__":
     import sys
@@ -203,4 +202,3 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
-
