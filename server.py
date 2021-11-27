@@ -48,6 +48,44 @@ class Server(Game):
                     if self.userShipsPlaced:
                         self.setShootTurn(1)
 
+                elif type(msg) == type(tuple()):
+                    if len(msg) == 2:
+                        try:
+                            if self.game_ui.tableWidget.item(msg[0], msg[1]).text():
+                                self.game_ui.tableWidget.item(msg[0], msg[1]).setBackground(QtGui.QColor(255,0,0))
+                                self.playBombSound()
+                                
+                                self.gotShootCount += 1
+                                if self.gotShootCount == 14:
+                                    self.send(self.ALL_SHIPS_DESTROYED)
+                                else:
+                                    self.send((self.SHOOT_SUCCESSFULL, msg[0], msg[1]))
+                                    
+                        except:
+                            item = QtWidgets.QTableWidgetItem("X")
+                            item.setTextAlignment(QtCore.Qt.AlignCenter)
+                            item.setBackground(QtGui.QColor(0,255,0))
+                            self.game_ui.tableWidget.setItem(msg[0], msg[1], item)
+
+                            self.playMissSound()
+                            self.send((self.SHOOT_MISSED, msg[0], msg[1]))
+
+                    if len(msg) == 3:
+                        self.game_ui.tableWidget_2.clearSelection()
+                        if msg[0] == self.SHOOT_SUCCESSFULL:
+                            self.game_ui.tableWidget_2.setItem(msg[1], msg[2], QtWidgets.QTableWidgetItem())
+                            self.game_ui.tableWidget_2.item(msg[1], msg[2]).setBackground(QtGui.QColor(0,255,0))
+                            self.game_ui.tableWidget_2.item(msg[1], msg[2]).setText("H")
+                            self.playBombSound()
+
+                        elif msg[0] == self.SHOOT_MISSED:
+                            item = QtWidgets.QTableWidgetItem("X")
+                            item.setTextAlignment(QtCore.Qt.AlignCenter)
+                            item.setBackground(QtGui.QColor(255,0,0))
+                            self.game_ui.tableWidget_2.setItem(msg[1], msg[2], item)
+
+                            self.playMissSound()
+
         self.conn.close()
         self.gameOver()
 

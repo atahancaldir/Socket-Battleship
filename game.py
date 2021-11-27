@@ -31,12 +31,14 @@ class Game():
         self.ALL_SHIPS_PLACED = "[ALL_SHIPS_PLACED]"
         self.SHOOT_SUCCESSFULL = "[SHOOT_SUCCESSFULL]"
         self.SHOOT_MISSED = "[SHOOT_MISSED]"
+        self.ALL_SHIPS_DESTROYED = "[ALL_SHIPS_DESTROYED]"
 
         # for players info
         self.username = ""
         self.userShipsPlaced = False
         self.opponentName = False # changes to true when the opponent name is get
         self.opponentShipsPlaced = False
+        self.gotShootCount = 0
 
         # for PyQt5
         self.app = QtWidgets.QApplication(sys.argv)
@@ -164,13 +166,6 @@ class Game():
         
         self.game_ui.tableWidget_2.setDisabled(not turn)
         self.game_ui.shootButton.setDisabled(not turn)
-
-    def gotShoot(self, status):
-        # 1 for got shoot, 0 for missed
-        if status:
-            self.send(self.SHOOT_SUCCESSFULL)
-        else:
-            self.send(self.SHOOT_MISSED)
 
     def playBombSound(self):
         playsound(self.bomb_sound, block=False)
