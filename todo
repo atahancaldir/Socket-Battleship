@@ -1,10 +1,12 @@
 -[x] button event
-- taking name and show Waiting opponent name
 - disconnection during the game
-- will be added
--server kapalıyken client açılmıyor
+- server kapalıyken client açılmıyor
+- shoot sırası opponentta ise tableWidget_2 uneditable olacak, disabled değil
+- client ve server'ın msg kısımlarındaki benzer yerler bir yere alınabilir
+- sıra client'tayken disabled kalmaya devam ediyor
+- DISCONNECT_MSG gönderilecek
 
--aynı yerde tekrar vurma
--el değiştirme
--buton temizleme
+-comment eklenecek
+-You must enclose instructions (a readme file) on how to compile, build and run your code (along with any system requirements)
+
 -windows sorunları düzelecek

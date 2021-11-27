@@ -1,3 +1,4 @@
+from types import BuiltinFunctionType
 from playsound import playsound
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -154,8 +155,16 @@ class Game():
         self.placeShips()
 
     def shoot(self):
+        try:
+            if self.game_ui.tableWidget_2.item(self.game_ui.tableWidget_2.currentRow(), self.game_ui.tableWidget_2.currentColumn()).text():
+                self.showWarning("You already shot this area!")
+                return
+        except:
+            pass
+
         oppSelectedCell = self.game_ui.tableWidget_2.currentRow(), self.game_ui.tableWidget_2.currentColumn()
         self.send(oppSelectedCell)
+        self.setShootTurn(0)
 
     def setShootTurn(self, turn):
         # turn -> 1 for me, 0 for opponent
@@ -176,13 +185,19 @@ class Game():
     def playPutShipSound(self):
         playsound(self.put_ship_sound, block=False)
 
-    def showWarning(self, text, title="Warning!"):
+    def showWarning(self, text, title="Warning!", close_program=False):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Warning)
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
 
-        msgBox.exec()
+        bttn = msgBox.exec()
+
+        if bttn == QtWidgets.QMessageBox.Ok and close_program:
+            self.game_ui.shootButton.setDisabled(True)
+            self.game_ui.tableWidget.setDisabled(True)
+            self.game_ui.tableWidget_2.setDisabled(True)
+            sys.exit()
 
     def leaveGame(self):
         msgBox = QtWidgets.QMessageBox()
@@ -196,5 +211,3 @@ class Game():
 
         if bttn == QtWidgets.QMessageBox.Yes:
             sys.exit()
-        else:
-            pass

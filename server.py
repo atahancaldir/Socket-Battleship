@@ -7,17 +7,17 @@ class Server(Game):
     def __init__(self):
         super().__init__()
 
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # creating socket object for server
 
         try:
-            self.s.bind(self.ADDR)
+            self.s.bind(self.ADDR) # binding to the specified IP(localhost) and PORT(5555) 
         except socket.error as e:
             self.game_ui.label.setText("Connection failed!")
         
-        self.s.listen()
+        self.s.listen() # setting the server into listening mode
         self.game_ui.label.setText("Server started, waiting for the client...")
 
-        T = Thread(target=self.socketConnection, daemon=True)
+        T = Thread(target=self.socketConnection, daemon=True) # creating a new thread for the socket connection
         T.start()
 
         self.Form_sign_ui.show()
@@ -31,10 +31,7 @@ class Server(Game):
             msg = pickle.loads(self.conn.recv(self.HEADER))
             if msg:
                 print(msg)
-                if msg == self.DISCONNECT_MSG:
-                    self.clientConnected = False
-
-                elif not self.opponentName:
+                if not self.opponentName:
                     self.game_ui.oppname_label.setText(msg)
                     self.game_ui.tableWidget.setDisabled(False)
                     self.game_ui.tableWidget_2.setDisabled(False)
@@ -43,10 +40,16 @@ class Server(Game):
                     self.send(self.username)
                     self.opponentName = True
 
+                if msg == self.DISCONNECT_MSG:
+                    self.clientConnected = False
+
                 elif msg == self.ALL_SHIPS_PLACED:
                     self.opponentShipsPlaced = True
                     if self.userShipsPlaced:
                         self.setShootTurn(1)
+
+                elif msg == self.ALL_SHIPS_DESTROYED:
+                    self.showWarning("Congratulations, " + self.username + "! You won!", "Game End", True)
 
                 elif type(msg) == type(tuple()):
                     if len(msg) == 2:
@@ -58,6 +61,7 @@ class Server(Game):
                                 self.gotShootCount += 1
                                 if self.gotShootCount == 14:
                                     self.send(self.ALL_SHIPS_DESTROYED)
+                                    self.showWarning("You lost, " + self.username + "! Go and learn more!", "Game End", True)
                                 else:
                                     self.send((self.SHOOT_SUCCESSFULL, msg[0], msg[1]))
                                     
@@ -69,6 +73,8 @@ class Server(Game):
 
                             self.playMissSound()
                             self.send((self.SHOOT_MISSED, msg[0], msg[1]))
+
+                        self.setShootTurn(1)
 
                     if len(msg) == 3:
                         self.game_ui.tableWidget_2.clearSelection()
