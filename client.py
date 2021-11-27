@@ -36,18 +36,21 @@ class Client(Game):
                 print(msg)
                 if msg == self.DISCONNECT_MSG:
                     self.connected = False
+
+                if not self.opponentName:
+                    self.game_ui.oppname_label.setText(msg)
+                    self.opponentName = True
     
-    def send(self):
-        message = self.send_msg.encode("utf-8")
+    def send(self, msg):
+        message = msg.encode("utf-8")
         msg_length = len(message)
         send_length = str(msg_length).encode("utf-8")
         send_length += b' ' * (self.HEADER - len(send_length))
-        self.client.send(send_length)
         self.client.send(message)
 
     def signIn(self):
         super().signIn()
-        self.send()
+        self.send(self.username)
 
 """
         try:

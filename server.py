@@ -31,23 +31,22 @@ class Server(Game):
 
         self.clientConnected = True
         while self.clientConnected:
-            msg_length = self.conn.recv(self.HEADER).decode("utf-8")
-            if msg_length:
-                msg_length = int(msg_length)
-                msg = self.conn.recv(msg_length).decode("utf-8")
+            msg = self.conn.recv(self.HEADER).decode("utf-8")
+            if msg:
                 print(msg)
                 if msg == self.DISCONNECT_MSG:
                     self.clientConnected = False
 
-                if self.send_key:
-                    self.send()
-                    self.send_key = False
+                if not self.opponentName:
+                    self.game_ui.oppname_label.setText(msg)
+                    self.opponentName = True
+                    self.send(self.username)
 
         self.conn.close()
         self.gameOver()
 
-    def send(self):
-        self.conn.send(self.send_msg.encode("utf-8"))
+    def send(self, msg):
+        self.conn.send(msg.encode("utf-8"))
 
     def gameOver(self):
         pass
