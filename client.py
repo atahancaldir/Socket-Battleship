@@ -24,33 +24,45 @@ class Client(Game):
                 self.client.connect(self.ADDR)
                 self.connected = True
                 
-                self.game_ui.tableWidget.setDisabled(False)
-                self.game_ui.tableWidget_2.setDisabled(False)
-                self.placeShips()
             except:
                 pass
 
         while self.connected:
-            msg = self.client.recv(self.HEADER).decode("utf-8")
+            msg = pickle.loads(self.client.recv(self.HEADER))
             if msg:
                 print(msg)
                 if msg == self.DISCONNECT_MSG:
                     self.connected = False
 
-                if not self.opponentName:
+                elif not self.opponentName:
                     self.game_ui.oppname_label.setText(msg)
+                    self.game_ui.tableWidget.setDisabled(False)
+                    self.game_ui.tableWidget_2.setDisabled(False)
+                    self.placeShips()
+
                     self.opponentName = True
+
+                elif msg == self.ALL_SHIPS_PLACED:
+                    self.opponentShipsPlaced = True
+                    if self.userShipsPlaced:
+                        self.setShootTurn(0)
+
+                elif type(msg) == type(tuple()):
+                    if self.game_ui.tableWidget.item(msg[0], msg[1]).text():
+                        self.game_ui.tableWidget.item(msg[0], msg[1]).setBackground(QtGui.QColor(255,0,0))
+                        self.gotShoot(1)
     
     def send(self, msg):
-        message = msg.encode("utf-8")
-        msg_length = len(message)
-        send_length = str(msg_length).encode("utf-8")
-        send_length += b' ' * (self.HEADER - len(send_length))
-        self.client.send(message)
+        self.client.send(pickle.dumps(msg))
 
     def signIn(self):
         super().signIn()
         self.send(self.username)
+
+    def placeShips(self):
+        super().placeShips()
+        if self.userShipsPlaced and self.opponentShipsPlaced:
+            self.setShootTurn(0)
 
 """
         try:
