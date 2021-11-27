@@ -98,6 +98,7 @@ class Ui_Form(object):
         self.tableWidget_2.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         self.tableWidget_2.setSelectionMode(self.tableWidget_2.NoSelection)
         self.tableWidget_2.setDisabled(True)
+        #self.tableWidget_2.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         item = QtWidgets.QTableWidgetItem()
         font = QtGui.QFont()
         font.setBold(True)
@@ -146,6 +147,7 @@ class Ui_Form(object):
         self.shootButton.setStyleSheet("background:#15b237;\n"
 "border-radius:15px;")
         self.shootButton.setObjectName("shootButton")
+        self.shootButton.setDisabled(True)
 
         self.placeShipButton = QtWidgets.QPushButton(Form)
         self.placeShipButton.setGeometry(QtCore.QRect(121, 430, 101, 61))

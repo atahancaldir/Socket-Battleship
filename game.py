@@ -18,22 +18,25 @@ class Game():
         self.currentShip = "Carrier"
         self.shipSizes = {"Carrier": 5, "Battleship": 4, "Submarine": 3, "Destroyer": 2}
 
-        self.selectedCells = set()
+        self.selectedCells = set() # for the user's table (left table)
 
         # for connection
         self.IP = "127.0.0.1"
         self.PORT = 5555
-        self.HEADER = 2048
-        self.DISCONNECT_MSG = "[Disconnected]"
+        self.HEADER = 4096
         self.ADDR = (self.IP, self.PORT)
+
+        # event messages
+        self.DISCONNECT_MSG = "[DISCONNECT]"
+        self.ALL_SHIPS_PLACED = "[ALL_SHIPS_PLACED]"
+        self.SHOOT_SUCCESSFULL = "[SHOOT_SUCCESSFULL]"
+        self.SHOOT_MISSED = "[SHOOT_MISSED]"
 
         # for players info
         self.username = ""
-        self.locatedShips = [[]]
-        self.opponentName = False
-        self.opponentShips = [[]]
-        self.attackedAreas = [[]]
-        self.gameStats = ""
+        self.userShipsPlaced = False
+        self.opponentName = False # changes to true when the opponent name is get
+        self.opponentShipsPlaced = False
 
         # for PyQt5
         self.app = QtWidgets.QApplication(sys.argv)
@@ -53,6 +56,7 @@ class Game():
         self.sign_ui.lineEdit.returnPressed.connect(self.signIn)
         self.game_ui.placeShipButton.clicked.connect(self.checkShipPlacement)
         self.game_ui.leaveButton.clicked.connect(self.leaveGame)
+        self.game_ui.shootButton.clicked.connect(self.shoot)
 
         self.game_ui.tableWidget.selectionModel().selectionChanged.connect(self.tableSelectionChanged)
 
@@ -87,6 +91,12 @@ class Game():
         self.game_ui.tableWidget_2.setSelectionMode(self.game_ui.tableWidget.SingleSelection)
 
         self.game_ui.placeShipButton.setHidden(True)
+
+        self.userShipsPlaced = True
+        self.send(self.ALL_SHIPS_PLACED)
+
+        if not self.opponentShipsPlaced:
+            self.game_ui.label.setText("Waiting for the opponent to place ships...")
 
     def checkShipPlacement(self):
         if len(self.selectedCells) != self.shipSizes[self.currentShip]:
@@ -140,6 +150,27 @@ class Game():
         self.isShipPlaced[self.currentShip] = True
         self.playPutShipSound()
         self.placeShips()
+
+    def shoot(self):
+        oppSelectedCell = self.game_ui.tableWidget_2.currentRow(), self.game_ui.tableWidget_2.currentColumn()
+        self.send(oppSelectedCell)
+
+    def setShootTurn(self, turn):
+        # turn -> 1 for me, 0 for opponent
+        if turn == 1:
+            self.game_ui.label.setText("Make your shoot!")
+        else:
+            self.game_ui.label.setText("Waiting for the opponent to shoot...")
+        
+        self.game_ui.tableWidget_2.setDisabled(not turn)
+        self.game_ui.shootButton.setDisabled(not turn)
+
+    def gotShoot(self, status):
+        # 1 for got shoot, 0 for missed
+        if status:
+            self.send(self.SHOOT_SUCCESSFULL)
+        else:
+            self.send(self.SHOOT_MISSED)
 
     def playBombSound(self):
         playsound(self.bomb_sound, block=False)
