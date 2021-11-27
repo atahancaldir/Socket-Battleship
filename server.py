@@ -24,24 +24,30 @@ class Server(Game):
 
     def socketConnection(self):
         self.conn, self.addr = self.s.accept()  # waits for the client
-        self.game_ui.label.setText("Client connected!")
+
+        self.game_ui.tableWidget.setDisabled(False)
+        self.game_ui.tableWidget_2.setDisabled(False)
+        self.placeShips()
 
         self.clientConnected = True
         while self.clientConnected:
             msg_length = self.conn.recv(self.HEADER).decode("utf-8")
-            print(msg_length)
             if msg_length:
                 msg_length = int(msg_length)
                 msg = self.conn.recv(msg_length).decode("utf-8")
+                print(msg)
                 if msg == self.DISCONNECT_MSG:
                     self.clientConnected = False
 
                 if self.send_key:
-                    self.conn.send(self.send_msg.encode("utf-8"))
+                    self.send()
                     self.send_key = False
 
         self.conn.close()
         self.gameOver()
+
+    def send(self):
+        self.conn.send(self.send_msg.encode("utf-8"))
 
     def gameOver(self):
         pass

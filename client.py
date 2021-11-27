@@ -23,16 +23,38 @@ class Client(Game):
             try:
                 self.client.connect(self.ADDR)
                 self.connected = True
-                self.game_ui.label.setText("Connected to host!")
+                
+                self.game_ui.tableWidget.setDisabled(False)
+                self.game_ui.tableWidget_2.setDisabled(False)
+                self.placeShips()
             except:
                 pass
+
+        while self.connected:
+            msg = self.client.recv(self.HEADER).decode("utf-8")
+            if msg:
+                print(msg)
+                if msg == self.DISCONNECT_MSG:
+                    self.connected = False
     
-    def send(self, data):
+    def send(self):
+        message = self.send_msg.encode("utf-8")
+        msg_length = len(message)
+        send_length = str(msg_length).encode("utf-8")
+        send_length += b' ' * (self.HEADER - len(send_length))
+        self.client.send(send_length)
+        self.client.send(message)
+
+    def signIn(self):
+        super().signIn()
+        self.send()
+
+"""
         try:
             self.client.send(pickle.dumps(data))
             return pickle.loads(self.client.recv(2048))
         except socket.error as e:
             print(e)
-
+"""
 
 c = Client()

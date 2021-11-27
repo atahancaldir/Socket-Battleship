@@ -27,7 +27,7 @@ class Game():
         self.DISCONNECT_MSG = "[Disconnected]"
         self.ADDR = (self.IP, self.PORT)
         
-        self.send_key = False
+        self.send_key = True
         self.send_msg = ""
 
         # for players info
@@ -75,6 +75,7 @@ class Game():
         self.game_ui.username_label.setText(self.username)
         self.Form_sign_ui.close()
         self.Form_game_ui.show()
+        self.send_msg = self.username
 
     def placeShips(self):
         for ship, value in self.isShipPlaced.items():
