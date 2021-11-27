@@ -1,3 +1,3 @@
 class Player():
     self.name = ""
-    self.
+    self.located
