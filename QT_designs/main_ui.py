@@ -66,8 +66,10 @@ class Ui_Form(object):
             item.setFont(font)
 ################
         header = self.tableWidget.horizontalHeader()
+        v_header = self.tableWidget.verticalHeader()
         for i in range(10):
             header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
+            v_header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
 ##################
         
         self.frame_3 = QtWidgets.QFrame(Form)
@@ -122,8 +124,10 @@ class Ui_Form(object):
 
 ################
         header = self.tableWidget_2.horizontalHeader()
+        v_header = self.tableWidget_2.verticalHeader()
         for i in range(10):
             header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
+            v_header.setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
 ##################
 
         self.label = QtWidgets.QLabel(Form)
@@ -142,7 +146,10 @@ class Ui_Form(object):
         self.shootButton.setGeometry(QtCore.QRect(10, 430, 101, 61))
         font = QtGui.QFont()
         font.setFamily("Lato Medium")
-        font.setPointSize(14)
+        if os.name == "nt":
+                font.setPointSize(12)
+        else:
+                font.setPointSize(14)
         self.shootButton.setFont(font)
         self.shootButton.setStyleSheet("background:#15b237;\n"
 "border-radius:15px;")
@@ -153,7 +160,10 @@ class Ui_Form(object):
         self.placeShipButton.setGeometry(QtCore.QRect(121, 430, 101, 61))
         font = QtGui.QFont()
         font.setFamily("Lato Medium")
-        font.setPointSize(14)
+        if os.name == "nt":
+                font.setPointSize(12)
+        else:
+                font.setPointSize(14)
         self.placeShipButton.setFont(font)
         self.placeShipButton.setStyleSheet("background:#f9c17f;\n"
 "border-radius:15px;")
@@ -163,7 +173,10 @@ class Ui_Form(object):
         self.leaveButton.setGeometry(QtCore.QRect(920, 430, 101, 61))
         font = QtGui.QFont()
         font.setFamily("Lato Medium")
-        font.setPointSize(14)
+        if os.name == "nt":
+                font.setPointSize(12)
+        else:
+                font.setPointSize(14)
         self.leaveButton.setFont(font)
         self.leaveButton.setStyleSheet("background:#f2353b;\n"
 "border-radius:15px;")

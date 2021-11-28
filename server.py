@@ -29,7 +29,10 @@ class Server(Game):
 
         self.clientConnected = True
 
-        network.socketConnection(self, "server")
+        try:
+            network.socketConnection(self, "server")
+        except ConnectionResetError:
+            self.showWarning("Opponent left the game!", close_program=True)
         
     def send(self, msg):
         self.conn.send(pickle.dumps(msg))
