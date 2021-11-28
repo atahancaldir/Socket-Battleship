@@ -6,4 +6,7 @@
 
 -windows sorunları düzelecek
     -.exe yapılabilir
-    
+    - table'ı seçmeden yeni renk görünmüyor
+    - deselect olmuyoe
+    - game end'de kasıyor
+    - client önce giremiyor
