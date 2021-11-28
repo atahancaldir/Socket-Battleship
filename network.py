@@ -29,9 +29,6 @@ def socketConnection(node, nodeType):
 
                         node.opponentName = True # it will not consider the next messages as the opponent's name
 
-                    if msg == node.DISCONNECT_MSG: # if the opponent quits, we get this message
-                        connected = False
-
                     elif msg == node.ALL_SHIPS_PLACED: # if the opponent placed all of his/her ships, we get this message
                         node.opponentShipsPlaced = True
                         if node.userShipsPlaced: # if the user also finished placing the ships

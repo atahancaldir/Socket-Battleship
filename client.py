@@ -39,7 +39,11 @@ class Client(Game):
 
     def signIn(self):
         super().signIn()
-        self.send(self.username)
+        try:
+            self.send(self.username)
+        except OSError:
+            print("Server should start first!")
+            sys.exit()
         
 
     def placeShips(self):

@@ -24,17 +24,16 @@ class Game():
         self.selectedCells = set() # for the user's table (left table)
 
         # for connection
-        self.IP = "127.0.0.1"
-        self.PORT = 5555
-        self.HEADER = 4096
+        self.IP = "127.0.0.1" # IP address for the connection (currently localhost)
+        self.PORT = 5555 # PORT number for the connection
+        self.HEADER = 4096 # buffer size for the package transmission
         self.ADDR = (self.IP, self.PORT)
 
-        # event messages
-        self.DISCONNECT_MSG = "[DISCONNECT]"
-        self.ALL_SHIPS_PLACED = "[ALL_SHIPS_PLACED]"
-        self.SHOOT_SUCCESSFULL = "[SHOOT_SUCCESSFULL]"
-        self.SHOOT_MISSED = "[SHOOT_MISSED]"
-        self.ALL_SHIPS_DESTROYED = "[ALL_SHIPS_DESTROYED]"
+        # event messages (we send these messages to notify the opponent player about some specific events)
+        self.ALL_SHIPS_PLACED = "[ALL_SHIPS_PLACED]" # we completed to placing the ships and ready to start
+        self.SHOOT_SUCCESSFULL = "[SHOOT_SUCCESSFULL]" # opponent's shoot is successful
+        self.SHOOT_MISSED = "[SHOOT_MISSED]" # opponent's shoot is missed
+        self.ALL_SHIPS_DESTROYED = "[ALL_SHIPS_DESTROYED]" # all of the user's(our) ships are destroyed
 
         # for players info
         self.username = ""
