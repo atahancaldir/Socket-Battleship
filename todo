@@ -1,0 +1,15 @@
+- [x] button event
+- disconnection during the game
+- server kapalıyken client açılmıyor
+- oyun bitince düzgün kapansın
+- DISCONNECT_MSG action
+- connection mesajlarını networke taşı
+
+-aynı yerde tekrar vurma
+-el değiştirme
+-buton temizleme
+-windows sorunları düzelecek
+    -tablo oturmuyor
+    -.exe yapılabilir
+    -vuruş yapamıyor(geçişler çalışmıyor)
+    

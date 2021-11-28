@@ -2,6 +2,7 @@ import socket
 from threading import Thread
 from game import *
 import pickle
+import network
 
 class Server(Game):
     def __init__(self):
@@ -27,80 +28,12 @@ class Server(Game):
         self.conn, self.addr = self.s.accept()  # waits for the client
 
         self.clientConnected = True
-        while self.clientConnected:
-            msg = pickle.loads(self.conn.recv(self.HEADER))
-            if msg:
-                print(msg)
-                if not self.opponentName:
-                    self.game_ui.oppname_label.setText(msg)
-                    self.game_ui.tableWidget.setDisabled(False)
-                    self.game_ui.tableWidget_2.setDisabled(False)
-                    self.placeShips()
 
-                    self.send(self.username)
-                    self.opponentName = True
-
-                if msg == self.DISCONNECT_MSG:
-                    self.clientConnected = False
-
-                elif msg == self.ALL_SHIPS_PLACED:
-                    self.opponentShipsPlaced = True
-                    if self.userShipsPlaced:
-                        self.setShootTurn(1)
-
-                elif msg == self.ALL_SHIPS_DESTROYED:
-                    self.showWarning("Congratulations, " + self.username + "! You won!", "Game End", True)
-
-                elif type(msg) == type(tuple()):
-                    if len(msg) == 2:
-                        try:
-                            if self.game_ui.tableWidget.item(msg[0], msg[1]).text():
-                                self.game_ui.tableWidget.item(msg[0], msg[1]).setBackground(QtGui.QColor(255,0,0))
-                                self.playBombSound()
-                                
-                                self.gotShootCount += 1
-                                if self.gotShootCount == 14:
-                                    self.send(self.ALL_SHIPS_DESTROYED)
-                                    self.showWarning("You lost, " + self.username + "! Go and learn more!", "Game End", True)
-                                else:
-                                    self.send((self.SHOOT_SUCCESSFULL, msg[0], msg[1]))
-                                    
-                        except:
-                            item = QtWidgets.QTableWidgetItem("X")
-                            item.setTextAlignment(QtCore.Qt.AlignCenter)
-                            item.setBackground(QtGui.QColor(0,255,0))
-                            self.game_ui.tableWidget.setItem(msg[0], msg[1], item)
-
-                            self.playMissSound()
-                            self.send((self.SHOOT_MISSED, msg[0], msg[1]))
-
-                        self.setShootTurn(1)
-
-                    if len(msg) == 3:
-                        self.game_ui.tableWidget_2.clearSelection()
-                        if msg[0] == self.SHOOT_SUCCESSFULL:
-                            self.game_ui.tableWidget_2.setItem(msg[1], msg[2], QtWidgets.QTableWidgetItem())
-                            self.game_ui.tableWidget_2.item(msg[1], msg[2]).setBackground(QtGui.QColor(0,255,0))
-                            self.game_ui.tableWidget_2.item(msg[1], msg[2]).setText("H")
-                            self.playBombSound()
-
-                        elif msg[0] == self.SHOOT_MISSED:
-                            item = QtWidgets.QTableWidgetItem("X")
-                            item.setTextAlignment(QtCore.Qt.AlignCenter)
-                            item.setBackground(QtGui.QColor(255,0,0))
-                            self.game_ui.tableWidget_2.setItem(msg[1], msg[2], item)
-
-                            self.playMissSound()
-
-        self.conn.close()
-        self.gameOver()
-
+        network.socketConnection(self, "server")
+        
     def send(self, msg):
         self.conn.send(pickle.dumps(msg))
-
-    def gameOver(self):
-        pass
-
+        
     def placeShips(self):
         super().placeShips()
         if self.userShipsPlaced and self.opponentShipsPlaced:

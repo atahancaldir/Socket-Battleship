@@ -1,19 +1,21 @@
-from types import BuiltinFunctionType
+import sys
+import os
+
+import pkg_resources
+if os.name == "nt":
+    pkg_resources.require("playsound==1.2.2") # to force Python to use playsound 1.2.2 in Windows to prevent sound problems
 from playsound import playsound
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from QT_designs import main_ui, sign_in_ui
 
-import sys
-import os
-
 class Game():
     def __init__(self):
 
         # sound effects
-        self.bomb_sound = os.path.join(os.getcwd(), "Sounds", "bomb_sound.mp3")
-        self.miss_sound = os.path.join(os.getcwd(), "Sounds", "miss_sound.mp3")
-        self.put_ship_sound = os.path.join(os.getcwd(), "Sounds", "put_ship_sound.mp3")
+        self.bomb_sound = os.path.join(os.getcwd(), "Sounds", "bomb_sound.wav")
+        self.miss_sound = os.path.join(os.getcwd(), "Sounds", "miss_sound.wav")
+        self.put_ship_sound = os.path.join(os.getcwd(), "Sounds", "put_ship_sound.wav")
 
         self.isShipPlaced = {"Carrier": False, "Battleship": False, "Submarine": False, "Destroyer": False}
         self.currentShip = "Carrier"
