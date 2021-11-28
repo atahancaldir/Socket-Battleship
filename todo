@@ -1,6 +1,4 @@
 - [x] button event
-- disconnection during the game
-- server kapalıyken client açılmıyor
 - oyun bitince düzgün kapansın
 - DISCONNECT_MSG action
 

@@ -24,7 +24,7 @@ class Game():
         self.selectedCells = set() # for the user's table (left table)
 
         # for connection
-        self.IP = "25.47.22.51"
+        self.IP = "127.0.0.1"
         self.PORT = 5555
         self.HEADER = 4096
         self.ADDR = (self.IP, self.PORT)
