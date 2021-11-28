@@ -79,6 +79,3 @@ def socketConnection(node, nodeType):
                                 node.game_ui.tableWidget_2.setItem(msg[1], msg[2], item)
                                 
                                 node.playMissSound()
-
-    if nodeType == "server":
-        node.conn.close()
