@@ -27,17 +27,17 @@ class Client(Game):
             except:
                 pass
 
+        self.send(self.username)
+
         try:
             network.socketConnection(self, "client")
         except ConnectionResetError:
             self.showWarning("Opponent left the game!", close_program=True)
+        finally:
+            self.connected = False
     
     def send(self, msg):
         self.client.send(pickle.dumps(msg))
-
-    def signIn(self):
-        super().signIn()
-        self.send(self.username)
 
     def placeShips(self):
         super().placeShips()

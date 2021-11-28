@@ -6,6 +6,7 @@ def socketConnection(node, nodeType):
         connected = node.connected
     else:
         connected = node.clientConnected
+
     while connected: # it will listen for a message while the connection is available
                 if nodeType == "client":
                     msg = pickle.loads(node.client.recv(node.HEADER)) # getting message from the server and unpacking it using pickle
@@ -18,7 +19,7 @@ def socketConnection(node, nodeType):
                         node.game_ui.tableWidget.setDisabled(False)
                         node.game_ui.tableWidget_2.setDisabled(False)
                         node.placeShips() # asks the user to start to place his/her ships on the tables because we know that opponent is ready as well
-
+                        
                         if nodeType == "server":
                             node.send(node.username)
 

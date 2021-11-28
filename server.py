@@ -18,9 +18,6 @@ class Server(Game):
         self.s.listen() # setting the server into listening mode
         self.game_ui.label.setText("Server started, waiting for the client...")
 
-        T = Thread(target=self.socketConnection, daemon=True) # creating a new thread for the socket connection
-        T.start()
-
         self.Form_sign_ui.show()
         sys.exit(self.app.exec_())
 
@@ -34,10 +31,17 @@ class Server(Game):
         except ConnectionResetError:
             self.showWarning("Opponent left the game!", close_program=True)
         finally:
+            self.clientConnected = False
             self.conn.close()
         
     def send(self, msg):
         self.conn.send(pickle.dumps(msg))
+
+    def signIn(self):
+        super().signIn()
+
+        T = Thread(target=self.socketConnection, daemon=True) # creating a new thread for the socket connection
+        T.start()
         
     def placeShips(self):
         super().placeShips()
