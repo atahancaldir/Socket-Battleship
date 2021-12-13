@@ -1,4 +1,4 @@
-# Battleship game project (CS 447 Project 1)
+# Battleship game project with Python
 
 Project is completely built with Python. Required packages can be found in *requirements.txt* file.
 
