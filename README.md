@@ -1,6 +1,6 @@
 # Battleship game project with Python
 
-Project is completely built with Python. Required packages can be found in *requirements.txt* file.
+Project is completely built with Python 3.8.8. Required packages can be found in *requirements.txt* file.
 
 PyQt5 framework is used to create the graphical user interface(GUI).
 
